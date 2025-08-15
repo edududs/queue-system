@@ -1,0 +1,89 @@
+from datetime import timedelta
+from uuid import uuid4
+
+import pytest
+from fastapi.security import OAuth2PasswordRequestForm
+
+from ..app.auth import service as auth_service
+from ..app.auth.models import RegisterUserRequest
+from ..app.exceptions import AuthenticationError
+from ..app.models.users import User
+
+
+class TestAuthService:
+    def test_verify_password(self):
+        password = "password123"
+        hashed = auth_service.get_password_hash(password)
+        assert auth_service.verify_password(password, hashed)
+        assert not auth_service.verify_password("wrongpassword", hashed)
+
+    def test_authenticate_user(self, db_session, test_user):
+        db_session.add(test_user)
+        db_session.commit()
+
+        user = auth_service.authenticate_user(
+            "username",
+            "password123",
+            db_session,
+        )
+        assert user is not False
+        if not isinstance(user, bool):
+            assert user.email == test_user.email
+
+    def test_login_for_access_token(self, db_session, test_user):
+        db_session.add(test_user)
+        db_session.commit()
+
+        form_data = OAuth2PasswordRequestForm(
+            username="username",
+            password="password123",
+            scope="",
+        )
+        token = auth_service.login_for_access_token(form_data, db_session)
+        assert token.token_type == "bearer"
+        assert token.access_token is not None
+
+
+@pytest.mark.asyncio
+async def test_register_user(db_session):
+    request = RegisterUserRequest(
+        username="new_user",
+        email="new@example.com",
+        password="password123",
+        first_name="New",
+        last_name="User",
+    )
+    auth_service.register_user(db_session, request)
+
+    user = db_session.query(User).filter_by(email="new@example.com").first()
+    assert user is not None
+    assert user.email == "new@example.com"
+    assert user.first_name == "New"
+    assert user.last_name == "User"
+
+
+def test_create_and_verify_token(db_session):
+    user_id = uuid4()
+    token = auth_service.create_access_token(
+        "test@example.com",
+        user_id,
+        timedelta(minutes=30),
+    )
+
+    token_data = auth_service.verify_token(token)
+    assert token_data.get_uuid() == user_id
+
+    # Test invalid credentials
+    assert (
+        auth_service.authenticate_user("test@example.com", "wrongpassword", db_session)
+        is False
+    )
+
+    form_data = OAuth2PasswordRequestForm(
+        username="wrong_user",
+        password="wrongpassword",
+        scope="",
+    )
+
+    with pytest.raises(AuthenticationError):
+        auth_service.login_for_access_token(form_data, db_session)
