@@ -1,0 +1,22 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+debug.log
+.DS_Store
+.github
+.venv
+.cursor
+my_space*
+*sourcery.yaml
+.vscode/
+*.md
+*.log
+scripts/
+rav.yaml
