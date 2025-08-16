@@ -32,6 +32,11 @@ class User(Base):
     first_name: Mapped[str] = mapped_column(String(50), nullable=False)
     last_name: Mapped[str] = mapped_column(String(50), nullable=False)
     hashed_password: Mapped[str] = mapped_column(String, nullable=False)
+    preferred_timezone: Mapped[Optional[str]] = mapped_column(
+        String(50),
+        nullable=True,
+        default="America/Sao_Paulo",
+    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),  # pylint: disable=E1102
