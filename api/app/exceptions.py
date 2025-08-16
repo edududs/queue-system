@@ -31,3 +31,13 @@ class AuthenticationError(HTTPException):
 class UserAlreadyExistsError(HTTPException):
     def __init__(self, message: str = "User already exists"):
         super().__init__(status_code=400, detail=message)
+
+
+class TaskError(HTTPException):
+    """Base exception for task-related errors."""
+
+
+class TaskNotFoundError(TaskError):
+    def __init__(self, task_id=None):
+        message = "Task not found" if task_id is None else f"Task with id {task_id} not found"
+        super().__init__(status_code=404, detail=message)
