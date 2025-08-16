@@ -14,11 +14,13 @@ dependencies = [
     "pydantic-settings>=2.10.1",
     "pyjwt>=2.10.1",
     "pymysql>=1.1.1",
+    "python-dateutil>=2.9.0.post0",
     "python-dotenv>=1.1.1",
     "python-multipart>=0.0.20",
     "redis>=6.4.0",
     "slowapi>=0.1.9",
     "sqlalchemy>=2.0.43",
+    "types-python-dateutil>=2.9.0.20250809",
     "uvicorn>=0.35.0",
 ]
 
