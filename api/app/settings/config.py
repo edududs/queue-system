@@ -1,4 +1,3 @@
-import os
 from typing import List
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -17,18 +16,16 @@ class Settings(BaseSettings):
     ALLOWED_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:5173"]
 
     # JWT
-    SECRET_KEY: str = os.getenv("SECRET_KEY", "xyz")
-    ALGORITHM: str = os.getenv("ALGORITHM", "HS256")
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = int(
-        os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30")
-    )
+    SECRET_KEY: str = "xyz"
+    ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
     # MySQL
-    MYSQL_HOST: str = os.getenv("MYSQL_HOST", "localhost")
-    MYSQL_PORT: int = int(os.getenv("MYSQL_PORT", "3306"))
-    MYSQL_USER: str = os.getenv("MYSQL_USER", "root")
-    MYSQL_PASSWORD: str = os.getenv("MYSQL_PASSWORD", "")
-    MYSQL_DATABASE: str = os.getenv("MYSQL_DATABASE", "queue_system")
+    MYSQL_HOST: str = "localhost"
+    MYSQL_PORT: int = 3306
+    MYSQL_USER: str = "root"
+    MYSQL_PASSWORD: str = ""
+    MYSQL_DATABASE: str = "queue_system"
 
     @property
     def DATABASE_URL(self) -> str:
@@ -39,7 +36,15 @@ class Settings(BaseSettings):
         )
 
     # Redis (futuro)
-    REDIS_URL: str = os.getenv("REDIS_URL", "redis://localhost:6379")
+    REDIS_URL: str = "redis://localhost:6379"
+
+    # RabbitMQ
+    RABBITMQ_URL: str = "amqp://guest:guest@localhost/"
+    RABBITMQ_EXCHANGE: str = "tasks.exchange"
+    RABBITMQ_QUEUE: str = "tasks.queue"
+    RABBITMQ_RETRY_QUEUE: str = "tasks.queue.retry"
+    RABBITMQ_DLQ: str = "tasks.queue.dlq"
+    RABBITMQ_RETRY_DELAY_MS: int = 30000
 
     model_config = SettingsConfigDict(
         env_file=".env",
