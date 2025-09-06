@@ -38,13 +38,15 @@ class Settings(BaseSettings):
     # Redis (futuro)
     REDIS_URL: str = "redis://localhost:6379"
 
-    # RabbitMQ
+    # RabbitMQ (topologia)
     RABBITMQ_URL: str = "amqp://guest:guest@localhost/"
-    RABBITMQ_EXCHANGE: str = "tasks.exchange"
-    RABBITMQ_QUEUE: str = "tasks.queue"
-    RABBITMQ_RETRY_QUEUE: str = "tasks.queue.retry"
-    RABBITMQ_DLQ: str = "tasks.queue.dlq"
+    RABBITMQ_EXCHANGE: str = "tasks"  # direct exchange
+    RABBITMQ_MAIN_QUEUE: str = "tasks.main"
+    RABBITMQ_RETRY_QUEUE: str = "tasks.retry"
+    RABBITMQ_DLQ: str = "tasks.dlq"
     RABBITMQ_RETRY_DELAY_MS: int = 30000
+    RABBITMQ_MAX_RETRIES: int = 5
+    RABBITMQ_PREFETCH_COUNT: int = 10
 
     model_config = SettingsConfigDict(
         env_file=".env",

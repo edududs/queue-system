@@ -76,3 +76,13 @@ def test_user_endpoints_authorization(client: TestClient):
         },
     )
     assert response.status_code == 401
+
+
+def test_get_user_by_id(client: TestClient, auth_headers):
+    response = client.get("/users/1", headers=auth_headers)
+    assert response.status_code == 200
+    user_data = response.json()
+    assert "email" in user_data
+    assert "first_name" in user_data
+    assert "last_name" in user_data
+    assert "password_hash" not in user_data
