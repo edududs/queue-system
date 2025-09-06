@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "aio-pika>=9.5.7",
     "alembic>=1.16.4",
     "bcrypt>=4.3.0",
     "email-validator>=2.2.0",
@@ -18,9 +19,11 @@ dependencies = [
     "python-dotenv>=1.1.1",
     "python-multipart>=0.0.20",
     "redis>=6.4.0",
+    "requests>=2.32.4",
     "slowapi>=0.1.9",
     "sqlalchemy>=2.0.43",
     "types-python-dateutil>=2.9.0.20250809",
+    "types-requests>=2.32.4.20250809",
     "uvicorn>=0.35.0",
 ]
 
